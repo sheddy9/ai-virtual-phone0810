@@ -1,5 +1,6 @@
 // Safe read-only MCP connectivity probe for Float / Netlify.
 // No Xiaohongshu credentials, cookies, write tools, or external requests.
+// Deploy Preview probe: requires FLOAT_MCP_TEST_TOKEN in Netlify Functions environment.
 const protocolVersion = "2025-03-26";
 const json = (id, result) => ({ jsonrpc: "2.0", id, result });
 const fail = (id, code, message) => ({ jsonrpc: "2.0", id, error: { code, message } });
