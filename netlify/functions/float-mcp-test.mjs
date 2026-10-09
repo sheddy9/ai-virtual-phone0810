@@ -2,13 +2,22 @@
 // No Xiaohongshu credentials, cookies, write tools, or external requests.
 // Deploy Preview probe: requires FLOAT_MCP_TEST_TOKEN in Netlify Functions environment.
 const protocolVersion = "2025-03-26";
+const cors = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Accept, Authorization, Mcp-Session-Id, MCP-Protocol-Version, Last-Event-ID",
+  "Access-Control-Expose-Headers": "Mcp-Session-Id, WWW-Authenticate",
+  "Access-Control-Max-Age": "86400",
+};
 const json = (id, result) => ({ jsonrpc: "2.0", id, result });
 const fail = (id, code, message) => ({ jsonrpc: "2.0", id, error: { code, message } });
 const reply = (body, status = 200) => new Response(JSON.stringify(body), {
   status,
-  headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" },
+  headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", ...cors },
 });
 export default async function handler(request) {
+  if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors });
+  if (request.method === "GET") return reply({ status: "ready", server: "float-mcp-connection-test", auth_required: true, note: "No Xiaohongshu access; no write tools." });
   if (request.method !== "POST") return reply({ error: "Method not allowed" }, 405);
   const expected = process.env.FLOAT_MCP_TEST_TOKEN;
   if (!expected) return reply({ error: "Server is not configured" }, 503);
@@ -22,7 +31,7 @@ export default async function handler(request) {
   if (id === undefined) return new Response(null, { status: 202 });
   switch (method) {
     case "initialize":
-      return reply(json(id, { protocolVersion, capabilities: { tools: {} }, serverInfo: { name: "float-mcp-connection-test", version: "0.1.0" } }));
+      return reply(json(id, { protocolVersion: typeof params?.protocolVersion === "string" ? params.protocolVersion : protocolVersion, capabilities: { tools: {} }, serverInfo: { name: "float-mcp-connection-test", version: "0.1.0" } }));
     case "ping": return reply(json(id, {}));
     case "tools/list": return reply(json(id, { tools: [{
       name: "connection_test",
