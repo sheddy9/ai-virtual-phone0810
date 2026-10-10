@@ -28,7 +28,7 @@ export default async function handler(request) {
   const { id, method, params } = payload;
   if (typeof method !== "string") return reply(fail(id ?? null, -32600, "Invalid request"), 400);
   // JSON-RPC notifications have no id and must not be answered.
-  if (id === undefined) return new Response(null, { status: 202 });
+  if (id === undefined) return new Response(null, { status: 202, headers: { ...cors, "Cache-Control": "no-store" } });
   switch (method) {
     case "initialize":
       return reply(json(id, { protocolVersion: typeof params?.protocolVersion === "string" ? params.protocolVersion : protocolVersion, capabilities: { tools: {} }, serverInfo: { name: "float-mcp-connection-test", version: "0.1.0" } }));
