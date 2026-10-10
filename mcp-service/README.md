@@ -19,3 +19,5 @@ This first bootstrap version exposes only `connection_test`. **It cannot read, c
 
 ## Safety
 No credential in source. Without `MCP_KEY`, POST requests fail closed (HTTP 503). A correct Bearer token is required for all MCP requests. The public GET health endpoint reports only generic status, not credentials. This is a personal, noncommercial experiment.
+
+<!-- redeploy: XHS_COOKIE configured -->
