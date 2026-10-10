@@ -11,6 +11,9 @@ Independent deployment lives under `mcp-service/` on `feature/xhs-mcp`, isolated
 - Endpoint: `https://float-xhs-mcp.netlify.app/.netlify/functions/xhs-mcp`.
 - In Float, use **Direct mode** for browser-to-server requests and enter the same `MCP_KEY` as the Access Token. Do not append `/sse`.
 
+## Redeploy after secret configuration
+The MCP_KEY variable was set on the dedicated project. This commit triggers a fresh deployment so the serverless function receives the secret.
+
 ## Status
 This first bootstrap version exposes only `connection_test`. **It cannot read, comment, like or publish on Xiaohongshu.** Real read-only XHS tools will be implemented after connection succeeds and permission is checked. Do not provide XHS Cookie yet.
 
