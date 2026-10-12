@@ -1,0 +1,7 @@
+[build]
+  command = "echo Building isolated MCP service"
+  publish = "public"
+  functions = "netlify/functions"
+
+# This config intentionally does not include the Float Next.js app.
+# Configure the separate Netlify site's Base directory to mcp-service.
